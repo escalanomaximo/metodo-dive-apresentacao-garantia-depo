@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Método Demanda Imediata de Vendas - DIVE™</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: A modern and professional theme using a light beige background (#F7F7F2), a dark slate for text (#1A2B3C), and a vibrant gradient from a deep blue (#3B82F6) to a vivid purple (#8B5CF6) for accents and calls-to-action. -->
+    <!-- Application Structure Plan: A single-page, vertical scrolling narrative application that translates the 12-slide sales presentation into interactive sections. The user flow is linear, guiding the prospect through a classic sales funnel: identifying the problem, presenting the solution (DIVE™), explaining the mechanism in detail, showing results, detailing the investment and ROI, listing deliverables, invalidating alternatives, creating urgency with a special offer, and ending with a clear call-to-action. This structure was chosen to build value progressively and lead to a decision, enhancing the presentation's persuasiveness with web-native interactivity. -->
+    <!-- Visualization & Content Choices: The application uses a mix of presentation methods without SVG or Mermaid. 1. Capa (Slide 1): Strong typography. 2. Desafio (Slide 2): Icon-based list. 3. Solução (Slide 3): Prominent text. 4. Como Funciona (Slide 4): Interactive cards for the 3 pillars. 5. Resultados (Slide 5): Animated number counter. 6. Investimento (Slide 6): Structured data. 7. ROI (Slide 7): Structured data with calculated value. 8. Entregáveis (Slide 8): Grid of brief descriptions. 9. Invalidação (Slide 9): Two-column comparison. 10. Diferencial (Slide 10): Icon-based list. 11. Urgência (Slide 11): Evocative text. 12. Oferta (Slide 12): Interactive cards for options. 13. CTA Final (Slide 13): Prominent button. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F7F7F2;
+            color: #1A2B3C;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #3B82F6, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        .section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 1.5rem;
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .interactive-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .interactive-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .offer-card-best {
+            border: 2px solid #8B5CF6;
+            transform: scale(1.05);
+        }
+        .detail-toggle {
+            cursor: pointer;
+            color: #3B82F6;
+            font-weight: 600;
+            margin-top: 1rem;
+            display: block;
+        }
+        .detail-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .detail-content.expanded {
+            max-height: 1000px; /* Adjusted to accommodate longer content */
+        }
+        /* Styles for WhatsApp profile cards */
+        .whatsapp-profile-card {
+            background-color: #FFFFFF;
+            border-radius: 1.5rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #25D366; /* WhatsApp green */
+        }
+        .status-message {
+            font-style: italic;
+            color: #4CAF50; /* A shade of green for status */
+        }
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #3B82F6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <main>
+
+        <section id="section-capa" class="section text-center bg-gray-900 text-white">
+            <div class="max-w-4xl mx-auto fade-in">
+                <h1 class="text-5xl md:text-7xl font-black mb-4 tracking-tight">Domine o Processo de Aquisição de Clientes <span class="gradient-text">Gerando entre 42 a 66 Novos Clientes Mensais</h1>
+                <p class="text-xl md:text-2xl text-gray-300">O Método DIVE™ é um poderoso sistema que transforma a forma como seu negócio é encontrado e escolhido, garantindo vendas imediatas e consistentes. Ele ativará um fluxo constante de clientes, conectando seu negócio tanto com quem já busca quanto com quem ainda nem sabia que precisava do seu produto/serviço.</p>
+            </div>
+        </section>
+
+        <section id="section-realidade-demanda" class="section text-center">
+            <div class="max-w-4xl mx-auto fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8">O Desafio da Demanda Consistente para o Seu Negócio</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <p class="text-2xl mb-2">❓</p>
+                        <h3 class="font-bold text-lg">Incerteza no Volume de Vendas</h3>
+                        <p class="text-gray-600">Demanda inconsistente é sinal de um processo quebrado. O problema não é o mercado — é a forma como você está ativando as oportunidades. Vendas imprevisíveis revelam falhas invisíveis.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <p class="text-2xl mb-2">🎯</p>
+                        <h3 class="font-bold text-lg">Oportunidades Não Capturadas</h3>
+                        <p class="text-gray-600">A lacuna entre a demanda existente e a capacidade de seu negócio ser encontrado por ela.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <p class="text-2xl mb-2">🌱</p>
+                        <h3 class="font-bold text-lg">Potencial Não Explorado</h3>
+                        <p class="text-gray-600">O desafio de despertar o interesse em pessoas que ainda não conhecem seu produto ou serviço.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md">
+                        <p class="text-2xl mb-2">⛓️</p>
+                        <h3 class="font-bold text-lg">Limitação para Escalar</h3>
+                        <p class="text-gray-600">A barreira para expandir devido à falta de um fluxo contínuo e previsível de novos clientes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-solucao-dive" class="section text-center bg-gray-50">
+            <div class="max-w-4xl mx-auto fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Apresentando o <span class="gradient-text">Método Demanda Imediata de Vendas - DIVE™</span></h2>
+                <p class="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">A boa notícia é que existe uma solução estruturada para isso. O DIVE™ é um sistema exclusivo, validado e replicável que vai ativar essa demanda imediata para seu negócio, trazendo previsibilidade e expansão.</p>
+            </div>
+        </section>
+
+        <section id="section-como-funciona" class="section">
+            <div class="max-w-6xl mx-auto text-center fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Como o DIVE™ Funciona na Prática</h2>
+                <p class="text-lg md:text-xl mb-12 text-gray-600">Mas como o DIVE™ faz isso na prática? Ele opera através de um mecanismo simples, porém abrangente, que transforma a maneira como seu negócio é encontrado e, mais importante, escolhido pelos clientes. Nosso foco é triplo: primeiro, conectar você, de forma inteligente, com a demanda que já existe no mercado; segundo, criar novas oportunidades de venda ao despertar o interesse de pessoas que ainda não conheciam sua solução; e, crucialmente, terceiro, maximizar o valor dos clientes que você já conquistou. Isso acontece em três etapas claras:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="interactive-card bg-white p-8 rounded-2xl shadow-lg text-left">
+                        <div class="text-4xl mb-4">🔍</div>
+                        <h3 class="text-2xl font-bold mb-2">Conexão Estratégica</h3>
+                        <p class="text-gray-600">Posicionamos seu negócio para ser encontrado por quem busca ativamente e para despertar o interesse em quem pode precisar, em qualquer plataforma digital.</p>
+                    </div>
+                    <div class="interactive-card bg-white p-8 rounded-2xl shadow-lg text-left">
+                        <div class="text-4xl mb-4">⚡</div>
+                        <h3 class="text-2xl font-bold mb-2">Aceleração Direta</h3>
+                        <p class="text-gray-600">Impulsionamos a conexão mais curta entre o cliente e sua solução, gerando contatos diretos e qualificados, acelerando a decisão de compra.</p>
+                    </div>
+                    <div class="interactive-card bg-white p-8 rounded-2xl shadow-lg text-left">
+                        <div class="text-4xl mb-4">🔄</div>
+                        <h3 class="text-2xl font-bold mb-2">Demanda Contínua e Valorização da Base</h3>
+                        <p class="text-gray-600">O sistema se retroalimenta, garantindo que o fluxo de novos clientes seja constante e previsível. Além disso, ativamos estratégias para reengajar e incentivar novas compras de clientes já existentes.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-resultados" class="section text-center bg-gray-50">
+            <div class="max-w-4xl mx-auto fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-2">Resultados Concretos com o DIVE™</h2>
+                <p class="text-lg md:text-xl mb-8 text-gray-600">E qual o resultado prático de tudo isso para o seu negócio? Com o Método DIVE™, você pode esperar atrair entre 42 a 66 novos clientes mensais. Isso se traduz em um fluxo de vendas previsível e constante. Você terá o aproveitamento total da demanda, sendo encontrado por quem já busca e, crucialmente, conquistando quem ainda não sabia que precisava do seu produto ou serviço. Seu negócio ganhará um posicionamento de destaque, ampliando sua influência no mercado digital. Tudo isso culmina em um crescimento sustentável e escalável, com mais faturamento, mais lucratividade e a estabilidade que você sempre buscou. E o mais importante: os primeiros resultados significativos começam a aparecer em cerca de 35 dias.</p>
+            </div>
+        </section>
+
+        <section id="section-velhas-promessas" class="section text-center bg-gray-50">
+            <div class="max-w-5xl mx-auto fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-12">Cansado das Mesmas Promessas e Resultados Medíocres?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                    <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-r-lg">
+                        <h3 class="font-bold text-xl mb-2 text-red-800">O Que Não Funciona</h3>
+                        <ul class="list-none space-y-3 text-gray-700">
+                            <li><span class="text-red-500 font-bold mr-2">✗</span>"Agências" que entregam cliques, não clientes.</li>
+                            <li><span class="text-red-500 font-bold mr-2">✗</span>Marketing "esperança" (panfletos, sorte, indicações).</li>
+                            <li><span class="text-red-500 font-bold mr-2">✗</span>Falsos "gurus" com promessas milagrosas.</li>
+                            <li><span class="text-red-500 font-bold mr-2">✗</span>Pagar por visibilidade que não vira venda.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-green-50 border-l-4 border-green-500 p-6 rounded-r-lg">
+                        <h3 class="font-bold text-xl mb-2 text-green-800">A Solução "Método Demanda Imediata de Vendas™</h3>
+                         <ul class="list-none space-y-3 text-gray-700">
+                            <li><span class="text-green-500 font-bold mr-2">✓</span>Processo focado em vendas e ROI (Retorno Sobre o Investimento).</li>
+                            <li><span class="text-green-500 font-bold mr-2">✓</span>Sistema validado e previsível.</li>
+                            <li><span class="text-green-500 font-bold mr-2">✓</span>Resultados concretos e mensuráveis.</li>
+                            <li><span class="text-green-500 font-bold mr-2">✓</span>Investimento que se traduz em demanda.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-porque-diferente" class="section">
+            <div class="max-w-5xl mx-auto text-center fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Por Que o <span class="gradient-text">DIVE™</span> é Diferente?</h2>
+                <p class="text-lg md:text-xl mb-12 text-gray-600">Não estamos aqui para fazer falsas promessas de resultados que você já está acostumado a receber.</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="interactive-card bg-white p-8 rounded-2xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-2">Foco no Processo Estruturado</h3>
+                        <p class="text-gray-600">Você domina o "como", não apenas sonha com o "quanto".</p>
+                    </div>
+                    <div class="interactive-card bg-white p-8 rounded-2xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-2">Resultados Replicáveis e Consistentes</h3>
+                        <p class="text-gray-600">Construímos um fluxo para seu negócio, que se adapta e cresce em qualquer nicho.</p>
+                    </div>
+                    <div class="interactive-card bg-white p-8 rounded-2xl shadow-lg">
+                        <h3 class="text-2xl font-bold mb-2">Conexão e Criação de Demanda</h3>
+                        <p class="text-gray-600">Seu negócio não só atrai quem busca, mas desperta interesse e desejo em novos potenciais clientes, expandindo seu mercado.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-entregaveis" class="section">
+            <div class="max-w-5xl mx-auto text-center fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-12">DIVE™ na Prática: A Estrutura Completa</h2>
+                <p class="text-lg md:text-xl mb-8 text-gray-600">O Método Demanda Imediata de Vendas - DIVE™ é um sistema robusto, construído sobre entregáveis essenciais que garantem um fluxo constante e previsível de clientes.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
+                    <div class="bg-white p-6 rounded-xl shadow-md"><p class="font-semibold">📈 Gestão de Tráfego Orientada a Resultados</p></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md"><p class="font-semibold">🎨 Criação de Conteúdo de Alta Conversão</p></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md"><p class="font-semibold">🔬 Análise Profunda e Otimização Constante</p></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md"><p class="font-semibold">📊 Relatórios Transparentes</p></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md"><p class="font-semibold">💡 Estratégias de Reativação de Clientes</p></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md"><p class="font-semibold">⚙️ Tecnologia e Rastreamento</p></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md"><p class="font-semibold">📋 Desenvolvimento de Estratégias</p></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md"><p class="font-semibold">🚀 Suporte Dedicado Premium</p></div>
+                    <div class="bg-white p-6 rounded-xl shadow-md"><p class="font-semibold">👀 Análise de Concorrência</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-investimento" class="section">
+            <div class="max-w-5xl mx-auto text-center fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-12">Seu Investimento Estratégico no <span class="gradient-text">Método Demanda Imediata de Vendas - DIVE™</span></h2>
+                <p class="text-lg md:text-xl mb-8 text-gray-600">Para que o Método DIVE™ funcione com a máxima eficiência e entregue os resultados que conversamos, ele requer um investimento que se divide em duas partes:</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg text-left">
+                        <h3 class="text-2xl font-bold mb-4">Investimento no Método DIVE™ (Serviço)</h3>
+                        <p class="text-3xl font-bold">R$ 4.100 <span class="text-lg font-normal text-gray-500">/mês</span></p>
+                        <p class="text-gray-600 mt-2">O acesso ao sistema, a toda nossa expertise para implementação, otimização e gestão desse processo, com todos os entregáveis que detalhamos.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg text-left">
+                        <h3 class="text-2xl font-bold mb-4">Investimento em Campanhas de Demanda (Mídia)</h3>
+                        <p class="text-3xl font-bold">Variável <span class="text-lg font-normal text-gray-500">/mês</span></p>
+                        <p class="text-gray-600 mt-2">Valor destinado às plataformas digitais, como Google e Meta, para que o seu negócio apareça para quem busca e para quem precisa ter o interesse despertado.</p>
+                    </div>
+                    <div class="md:col-span-2 bg-white p-8 rounded-2xl shadow-lg text-center">
+                        <h3 class="text-2xl font-bold mb-4">Investimento Mensal no Método DIVE™ </h3>
+                        <p class="text-5xl font-black gradient-text">R$ 4.100 <span class="text-xl font-normal text-gray-500">/mês</span></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-retorno-roi" class="section bg-gray-50">
+            <div class="max-w-5xl mx-auto text-center fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-12">O Retorno <span class="gradient-text">Inevitável</span></h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="bg-white p-8 rounded-2xl shadow-lg text-left">
+                        <h3 class="text-2xl font-bold mb-4">Potencial de Clientes e Faturamento</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="font-semibold">Novos Clientes/Mês</p>
+                                <p class="text-3xl font-bold">42 a 66</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold">Faturamento Adicional Potencial</p>
+                                <p class="text-3xl font-bold">R$ 21.000 a R$ 33.000 <span class="text-lg font-normal text-gray-500">/mês</span></p>
+                                <p class="text-sm text-gray-500">(Baseado em um ticket médio de R$ 500)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-lg text-left">
+                         <h3 class="text-2xl font-bold mb-4">O ROI (RETORNO) do DIVE™</h3>
+                         <div class="space-y-4">
+                            <p class="text-green-600 font-bold text-lg">O Método Demanda Imediata de Vendas - DIVE™ não apenas se paga, ele gera um lucro significativo e a previsibilidade que você busca.</p>
+                            <p class="text-gray-700">Para cobrir o investimento de R$ 4.100,00, você precisa de apenas cerca de 9 clientes (considerando ticket médio de R$ 500). O DIVE™ entrega muito mais!</p>
+                            <p class="text-gray-700">Pense no valor da previsibilidade e de ter um parceiro que cuida de tudo isso para você. Isso não tem preço, mas o DIVE™ o torna tangível.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="section-hora-agora" class="section text-center bg-gray-900 text-white">
+            <div class="max-w-4xl mx-auto fade-in">
+                <h2 class="text-5xl md:text-6xl font-black mb-4 tracking-tight">O Custo de Não Agir: <span class="gradient-text">Sua Demanda Não Espera.</span></h2>
+                <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+                    A cada dia que passa, seu concorrente está capturando a demanda que poderia ser sua. O mercado não espera, e essa é uma oportunidade estratégica para dominar seu mercado. Aqueles que agem primeiro colhem os melhores frutos.
+                </p>
+            </div>
+        </section>
+
+        <section id="section-oferta" class="section bg-gray-50">
+             <div class="max-w-6xl mx-auto text-center fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Sua Decisão, Suas Vantagens</h2>
+                <p class="text-lg md:text-xl mb-12 text-gray-600">Para quem age rápido, benefícios exclusivos. A oportunidade é agora.</p>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="interactive-card bg-white p-8 rounded-2xl shadow-lg border-2 border-transparent lg:mt-6">
+                        <h3 class="text-xl font-bold mb-2">CAMPANHA DE NOVOS CLIENTES POR TEMPO LIMITADO</h3>
+                        <p class="text-gray-500 mb-4">O Valor Inegável do DIVE™</p>
+                        <p class="text-2xl font-bold mb-4">R$ 3.500 <span class="text-base font-normal">/mês</span></p>
+                        <ul class="text-left space-y-2 text-gray-600">
+                            <li><span class="text-green-500 mr-2">✓</span>Desconto de R$ 600,00/mês</li>
+                            <li><span class="text-green-500 mr-2">✓</span>42 a 66 novos clientes/mês</li>
+                            <li><span class="text-green-500 mr-2">✓</span>Previsibilidade e Crescimento</li>
+                        </ul>
+                    </div>
+                    <div class="interactive-card bg-white p-8 rounded-2xl shadow-2xl offer-card-best relative">
+                        <p class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-bold px-4 py-1 rounded-full">OPORTUNIDADE ÚNICA</p>
+                        <h3 class="text-2xl font-bold mb-2">FECHAMENTO AGORA COM 15% DE DESCONTO (SOMENTE DURANTE A REUNIÃO)</h3>
+                        <p class="text-purple-600 mb-4 font-semibold">Ativação Completa</p>
+                        <p class="text-4xl font-black mb-4">R$ 2.975 <span class="text-lg font-normal text-gray-500"></span></p>
+                        <ul class="list-none text-left space-y-2 text-gray-600">
+                           <li><span class="text-green-500 mr-2">✓</span><span class="font-bold">15% de Desconto</span></li>
+                           <li><span class="text-green-500 mr-2">✓</span><span class="font-bold">Consultoria Estratégica (2h)</span></li>
+                           <li><span class="text-green-500 mr-2">✓</span>42 a 66 novos clientes/mês</li>
+                           <li><span class="text-green-500 mr-2">✓</span>Previsibilidade e Crescimento</li>
+                        </ul>
+                    </div>
+                    <div class="interactive-card bg-white p-8 rounded-2xl shadow-lg border-2 border-transparent lg:mt-6">
+                        <h3 class="text-xl font-bold mb-2">FECHAMENTO NAS PRÓXIMAS 48 HORAS</h3>
+                        <p class="text-gray-500 mb-4">Bônus Adicional</p>
+                        <p class="text-2xl font-bold mb-4">R$ 3.150 <span class="text-base font-normal">/mês</span></p>
+                        <ul class="list-none text-left space-y-2 text-gray-600">
+                            <li><span class="text-green-500 mr-2">✓</span><span class="font-bold">10% de Desconto</span></li>
+                           <li><span class="text-500 mr-2">✓</span><span class="font-bold">Consultoria Estratégica (1h)</span></li>
+                            <li><span class="text-green-500 mr-2">✓</span>42 a 66 novos clientes/mês</li>
+                            <li><span class="text-green-500 mr-2">✓</span>Previsibilidade e Crescimento</li>
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="md:col-span-2 bg-white p-8 rounded-2xl shadow-lg text-center">
+                        <h3 class="text-2xl font-bold mb-4">CONTRATO FIDELIDADE POR 6 MESES no Método DIVE™ (DESCONTO DE 20%) </h3>
+                        <p class="text-5xl font-black gradient-text">R$ 2.800 <span class="text-xl font-normal text-gray-500">/mês</span></p>
+                    </div>
+        </section>
+
+        <!-- Bloco: Garantia de Resultados do Método Demanda Imediata de Vendas - DIVE™ -->
+        <section id="section-garantia" class="section bg-gray-50">
+            <div class="max-w-5xl mx-auto text-center fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8">Nossa <span class="gradient-text">Garantia de Resultados</span> com o Método DIVE™</h2>
+                <p class="text-lg md:text-xl mb-8 text-gray-600">Para que você tenha total segurança e confiança na ativação do Método Demanda Imediata de Vendas - DIVE™, nossa parceria é construída sobre um compromisso claro e transparente. Não se trata de uma promessa vazia, mas sim de uma garantia atrelada ao nosso processo e à sua colaboração.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                    <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-blue-500">
+                        <h3 class="font-bold text-xl mb-2 text-blue-800">Nossa Obrigação como Agência (O que Garantimos)</h3>
+                        <ul class="list-none space-y-3 text-gray-700">
+                            <li><span class="text-blue-500 font-bold mr-2">✓</span><span class="font-semibold">Garantia de Geração de Leads:</span> Podemos garantir entre 42 a 66 leads mensais.</li>
+                            <li><span class="text-blue-500 font-bold mr-2">✓</span><span class="font-semibold">Garantia de Eficiência no Custo:</span> Garantimos que o Custo por Lead (CPL) estará abaixo de um valor determinado, que será definido e acordado especificamente para o seu nicho.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-purple-500">
+                        <h3 class="font-bold text-xl mb-2 text-purple-800">Sua Obrigação como Cliente (Para Validação da Garantia)</h3>
+                        <ul class="list-none space-y-3 text-gray-700">
+                            <li><span class="text-purple-500 font-bold mr-2">✓</span><span class="font-semibold">Garantir Investimento Mínimo Mensal em Tráfego Pago:</span> É essencial manter o investimento em mídia acordado.</li>
+                            <li><span class="text-purple-500 font-bold mr-2">✓</span><span class="font-semibold">Garantir estrutura necessária para atingir os objetivos:</span> Ter uma boa página de destino (landing page), funil de vendas, seguir nossas recomendações de copys, criativos e estratégias e cumprir os prazos acordados.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-2xl shadow-lg mt-8 text-center">
+                    <h3 class="text-2xl font-bold mb-4">Condições Contratuais da Garantia (Parceria Duradoura)</h3>
+                    <ul class="list-disc list-inside text-gray-600 mt-4 space-y-2">
+                        <li><span class="text-green-500 font-bold mr-2">✓</span>A garantia só pode ser feita mediante um contrato de <span class="font-bold">12 meses (obrigatório)</span>.</li>
+                        <li><span class="text-green-500 font-bold mr-2">✓</span>No entanto, em caso de contrato com garantia, a meta exata de leads, o custo por lead (CPL) e o valor mensal de investimento em mídia serão analisados e definidos individualmente.</li>
+                        <li><span class="text-red-500 font-bold mr-2">✗</span>Se a agência não conseguir bater a meta de leads no mês: No mês seguinte, nós usaremos 50% do valor pago de mensalidade e utilizaremos essa verba para aumentar o investimento em tráfego pago (nosso fee).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Novo Bloco: Depoimentos de Clientes Satisfeitos -->
+        <section id="section-depoimentos" class="section bg-gray-50">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl md:text-5xl font-bold text-center mb-12">O Que Nossos Clientes Satisfeitos Dizem sobre o DIVE™</h2>
+                <div id="image-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Images will be loaded here by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <section id="section-cta-final" class="section">
+            <div class="max-w-3xl mx-auto fade-in text-center">
+                <h2 class="text-5xl md:text-6xl font-black mb-4 tracking-tight">Pronto para Ativar a <span class="gradient-text">Demanda Imediata?</span></h2>
+                <p class="text-lg md:text-xl mb-8 text-gray-600">Não aceite mais a incerteza. Descubra o processo que garante resultados. Este é o momento de agir.</p>
+                <a href="https://wa.me/47996917325?text=Quero%20iniciar%20o%20M%C3%A9todo%20DIVE" target="_blank" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-4 px-10 rounded-full text-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300 inline-block">
+                    Quero Ativar o Método DIVE™ Agora
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+
+            function animateValue(obj, start, end, duration) {
+                let startTimestamp = null;
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    const currentValue = Math.floor(progress * (end - start) + start);
+                    obj.innerHTML = `${currentValue} a ${Math.floor(currentValue * (66 / 42))}`;
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                         obj.innerHTML = `42 a 66`;
+                    }
+                };
+                window.requestAnimationFrame(step);
+            }
+
+            const counter = document.getElementById('client-counter');
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        animateValue(counter, 0, 42, 2000);
+                        counterObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            if(counter) {
+                counterObserver.observe(counter);
+            }
+
+            // Toggle details for "Como o DIVE™ Funciona na Prática"
+            document.querySelectorAll('.detail-toggle').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    const targetId = e.target.dataset.target;
+                    const detailContent = document.getElementById(targetId);
+                    if (detailContent) {
+                        detailContent.classList.toggle('expanded');
+                        e.target.textContent = detailContent.classList.contains('expanded') ? 'Ver menos ▲' : 'Ver detalhes ▼';
+                    }
+                });
+            });
+
+            // JavaScript for generating WhatsApp profile images
+            const imageContainer = document.getElementById('image-container');
+            const prompts = [
+                "a portrait of a light-skinned Brazilian man, 30 years old, with light brown hair, surfer stereotype, smiling confidently, WhatsApp profile picture style, beach natural lighting, reflecting a laid-back yet successful entrepreneur",
+                "a portrait of a Brazilian woman, 35 years old, with a determined and relieved expression, casual everyday clothes, realistic, WhatsApp profile picture style, soft natural lighting, showing resilience of an entrepreneur",
+                "a portrait of a Brazilian man, 45 years old, with a warm, slightly weathered face, simple polo shirt, realistic, WhatsApp profile picture style, diffused lighting, conveying experience and hard work of an entrepreneur",
+                "a portrait of a Brazilian woman, 38 years old, owner of a supplement store, strong and confident, short dark hair, athletic build, WhatsApp profile picture style, realistic background of a well-stocked, modern supplement store interior, bright lighting", // Ana Luzia com fundo realista
+                "a portrait of a Brazilian woman, 40 years old, with a gentle, appreciative smile, simple blouse, realistic, WhatsApp profile picture style, natural light, reflecting quiet satisfaction of an entrepreneur",
+                "a portrait of a Brazilian man, 45 years old, owner of a car auto parts shop, standing confidently in front of a realistic background of organized shelves filled with various auto parts, WhatsApp profile picture style, industrial lighting" // Luiz Fernando com fundo realista
+            ];
+
+            const clientNames = [
+                "Roberto Diego", "Maria Oliveira", "Carlos Santos", "Ana Luzia", "Ana Costa", "Luiz Fernando"
+            ];
+
+            const statusMessages = [
+                "🚀 Em menos de 4 meses, faturamento maior que o ano passado inteiro com o DIVE!",
+                "✅ DIVE trouxe previsibilidade! Lucros cresceram e a base de clientes disparou.",
+                "📈 Mais clientes, mais vendas, mais lucro! O Método DIVE™ realmente funciona.",
+                "⭐ Com o DIVE, meu negócio explodiu! Clientes qualificados e faturamento garantido.",
+                "💯 O DIVE transformou meu negócio! Fluxo constante de clientes e crescimento sustentável.",
+                "📊 Faturamento e lucratividade em alta! O DIVE é o parceiro ideal para escalar."
+            ];
+
+            for (let i = 0; i < prompts.length; i++) {
+                const card = document.createElement('div');
+                card.className = 'whatsapp-profile-card';
+                card.innerHTML = `
+                    <div class="profile-image flex items-center justify-center bg-gray-200">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <h3 class="text-xl font-semibold mt-4 mb-1">${clientNames[i]}</h3>
+                    <p class="text-gray-600 text-sm">Cliente Satisfeito</p>
+                    <p class="status-message text-sm mt-2">${statusMessages[i]}</p>
+                `;
+                imageContainer.appendChild(card);
+
+                const imageElement = card.querySelector('.profile-image');
+                const loadingSpinner = card.querySelector('.loading-spinner');
+
+                try {
+                    const userPrompt = prompts[i];
+                    const payload = { instances: { prompt: userPrompt }, parameters: { "sampleCount": 1} };
+                    const apiKey = "";
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+
+                    let response;
+                    let result;
+                    let retries = 0;
+                    const maxRetries = 5;
+                    const baseDelay = 1000; // 1 second
+
+                    while (retries < maxRetries) {
+                        try {
+                            response = await fetch(apiUrl, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            });
+
+                            if (response.status === 429) { // Too Many Requests
+                                const delay = baseDelay * Math.pow(2, retries);
+                                await new Promise(resolve => setTimeout(resolve, delay));
+                                retries++;
+                                continue;
+                            }
+
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! status: ${response.status}`);
+                            }
+
+                            result = await response.json();
+                            break; // Exit loop if successful
+
+                        } catch (error) {
+                            console.error(`Attempt ${retries + 1} failed:`, error);
+                            const delay = baseDelay * Math.pow(2, retries);
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            retries++;
+                        }
+                    }
+
+                    if (result && result.predictions && result.predictions.length > 0 && result.predictions[0].bytesBase64Encoded) {
+                        const imageUrl = `data:image/png;base64,${result.predictions[0].bytesBase64Encoded}`;
+                        imageElement.innerHTML = `<img src="${imageUrl}" alt="Perfil de Cliente Satisfeito" class="profile-image">`;
+                    } else {
+                        imageElement.innerHTML = `<img src="https://placehold.co/120x120/cccccc/333333?text=Erro" alt="Erro ao carregar imagem" class="profile-image">`;
+                        console.error('Estrutura de resposta inesperada ou conteúdo de imagem ausente.');
+                    }
+                } catch (error) {
+                    imageElement.innerHTML = `<img src="https://placehold.co/120x120/cccccc/333333?text=Erro" alt="Erro ao carregar imagem" class="profile-image">`;
+                    console.error('Erro ao gerar imagem:', error);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
